@@ -27,7 +27,6 @@ typename BST<T>::Tree* BST<T>::Search_h(T key, Tree* root)
     return root ? root->value==key ? root : Search_h(key,root->child[key>root->value]) : NULL;
 }
 
-
 template<class T>
 typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
 {
@@ -45,7 +44,6 @@ typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
     
     return temp;
 }
-
 
 template<class T>
 typename BST<T>::Tree* BST<T>::Double_Rotate(Tree* root, int dir, type mode)
@@ -216,7 +214,6 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
     }
     return root;
 }
-
 
 
 template<class T>
