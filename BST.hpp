@@ -20,16 +20,10 @@ class BST
 public:
     
     enum COLOR
-    {
-        Black,
-        Red
-    };
+    {   Black,  Red   };
     
     enum type
-    {
-        AVL,
-        RBT
-    };
+    {  AVL, RBT };
     
     struct Tree
     {
@@ -97,9 +91,7 @@ public:
 };
 
 
-
 template <class T>
-
 class RBT :  public AVL<T>
 {
 
