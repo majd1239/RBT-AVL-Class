@@ -78,14 +78,11 @@ void BST<T>::Bal_adj(BST<T>::Tree* root, int dir, int bal)
     else if(grand_child->balance == bal)
     {
         root->balance=-bal;
-        
         root->child[dir]->balance=0;
-        
     }
     else
     {
         root->balance=0;
-        
         root->child[dir]->balance=bal;
     }
     
@@ -130,7 +127,6 @@ typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int *done, type mode)
         
         root->child[dir]=insert_h(root->child[dir],key,done,mode);
         
-        
         if(mode==RBT)
         {
             if(isRed(root->child[dir]))
@@ -138,7 +134,6 @@ typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int *done, type mode)
                 if(isRed(root->child[!dir]))
                 {
                     root->color=Red;
-                    
                     root->child[0]->color=root->child[1]->color=Black;
                 }
                 
@@ -246,7 +241,6 @@ typename BST<T>::Tree*  BST<T>::remove_h(Tree* root, T key, int *done, type mode
             if(mode==RBT)
             {
                 if (isRed(succ) || (isRed(root) && (root->color=Black)) ) *done=1;
-                
             }
             
             delete succ;
@@ -301,13 +295,11 @@ void AVL<T>::Insert(T key)
     BST<T>::Root=BST<T>::insert_h( BST<T>::Root, key, &status,BST<T>::AVL);
 }
 
-
 template<class T>
 void AVL<T>::Print()
 {
     if(BST<T>::Root) BST<T>::print_h(BST<T>::Root); else cout<<"Tree is empty";
 }
-
 
 template<class T>
 void AVL<T>::Remove(T key)
@@ -316,7 +308,6 @@ void AVL<T>::Remove(T key)
     
     BST<T>::Root=BST<T>::remove_h(BST<T>::Root, key, &status,BST<T>::AVL);
 }
-
 
 template<class T>
 RBT<T>::RBT(){  BST<T>::Root=NULL; }
