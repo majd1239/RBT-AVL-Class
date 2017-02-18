@@ -227,9 +227,12 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
 template<class T>
 typename BST<T>::Tree*  BST<T>::remove_h(Tree* root, T key, int *done, type mode)
 {
-    Tree* succ; int dir=key>root->value;
+    Tree* succ;
     
-    if(key==root->value)
+    if(!root)
+        cout<<"Key does not exist"<<endl;
+    
+    else if(key==root->value)
     {
         if(root->child[0] && root->child[1])
         {
@@ -254,6 +257,8 @@ typename BST<T>::Tree*  BST<T>::remove_h(Tree* root, T key, int *done, type mode
     }
     else
     {
+        int dir=key>root->value;
+        
         root->child[dir]=remove_h(root->child[dir], key, done, mode);
         
         if(mode==RBT && !*done)
