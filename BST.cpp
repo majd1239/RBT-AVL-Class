@@ -18,7 +18,7 @@ typename BST<T>::Tree* BST<T>::Make_Node(T key)
 template<class T>
 bool BST<T>::isRed(BST::Tree *root)
 {
-    return root && root->color==Red;
+    return root && root->red;
 }
 
 template<class T>
@@ -26,6 +26,7 @@ typename BST<T>::Tree* BST<T>::Search_h(T key, Tree* root)
 {
     return root ? root->value==key ? root : Search_h(key,root->child[key>root->value]) : NULL;
 }
+
 
 template<class T>
 typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
@@ -38,12 +39,13 @@ typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
     
     if(mode==RBT)
     {
-        root->color=Red;
-        temp->color=Black;
+        root->red=true;
+        temp->red=false;
     }
     
     return temp;
 }
+
 
 template<class T>
 typename BST<T>::Tree* BST<T>::Double_Rotate(Tree* root, int dir, type mode)
@@ -76,11 +78,14 @@ void BST<T>::Bal_adj(BST<T>::Tree* root, int dir, int bal)
     else if(grand_child->balance == bal)
     {
         root->balance=-bal;
+        
         root->child[dir]->balance=0;
+        
     }
     else
     {
         root->balance=0;
+        
         root->child[dir]->balance=bal;
     }
     
@@ -125,23 +130,25 @@ typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int *done, type mode)
         
         root->child[dir]=insert_h(root->child[dir],key,done,mode);
         
+        
         if(mode==RBT)
         {
             if(isRed(root->child[dir]))
             {
                 if(isRed(root->child[!dir]))
                 {
-                    root->color=Red;
-                    root->child[0]->color=root->child[1]->color=Black;
+                    root->red=true;
+                    
+                    root->child[0]->red=root->child[1]->red=false;
                 }
                 
                 else
                 {
                     if(isRed(root->child[dir]->child[dir]))
-                        root = Rotate(root,!dir, AVL);
+                        root = Rotate(root,!dir, RBT);
                     
                     else if(isRed(root->child[dir]->child[!dir]))
-                        root = Double_Rotate(root, !dir, AVL);
+                        root = Double_Rotate(root, !dir, RBT);
                 }
             }
         }
@@ -194,17 +201,17 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
         {
             if(isRed(par)) *flag=1;
             
-            par->color=Black;
-            sib->color=Red;
+            par->red=false;
+            sib->red=true;
             
         }
         else
         {
-            COLOR color=par->color; bool case_new_par = root==par;
+            bool color=par->red; bool case_new_par = root==par;
             
             par = isRed(sib->child[!dir]) ? Rotate(par,dir,RBT) : Double_Rotate(par, dir, RBT);
             
-            par->color = color; par->child[0]->color = par->child[1]->color = Black;
+            par->red = color; par->child[0]->red = par->child[1]->red = false;
             
             case_new_par ? root = par : root->child[dir] = par;
             
@@ -214,6 +221,7 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
     }
     return root;
 }
+
 
 
 template<class T>
@@ -237,7 +245,8 @@ typename BST<T>::Tree*  BST<T>::remove_h(Tree* root, T key, int *done, type mode
             
             if(mode==RBT)
             {
-                if (isRed(succ) || (isRed(root) && (root->color=Black)) ) *done=1;
+                if (isRed(succ) || (isRed(root) && (root->red=false)) ) *done=1;
+                
             }
             
             delete succ;
@@ -292,11 +301,13 @@ void AVL<T>::Insert(T key)
     BST<T>::Root=BST<T>::insert_h( BST<T>::Root, key, &status,BST<T>::AVL);
 }
 
+
 template<class T>
 void AVL<T>::Print()
 {
     if(BST<T>::Root) BST<T>::print_h(BST<T>::Root); else cout<<"Tree is empty";
 }
+
 
 template<class T>
 void AVL<T>::Remove(T key)
@@ -305,6 +316,7 @@ void AVL<T>::Remove(T key)
     
     BST<T>::Root=BST<T>::remove_h(BST<T>::Root, key, &status,BST<T>::AVL);
 }
+
 
 template<class T>
 RBT<T>::RBT(){  BST<T>::Root=NULL; }
@@ -315,7 +327,7 @@ void RBT<T>::Insert(T key)
     int status=0;
     BST<T>::Root=BST<T>::insert_h(BST<T>::Root, key, &status,BST<T>::RBT);
     
-    BST<T>::Root->color=BST<T>::Black;
+    BST<T>::Root->red=false;
 }
 
 template<class T>
@@ -326,7 +338,7 @@ void RBT<T>::Remove(T key)
     BST<T>::Root=BST<T>::remove_h(BST<T>::Root, key, &status,BST<T>::RBT);
     
     if(BST<T>::Root)
-        BST<T>::Root->color=BST<T>::Black;
+        BST<T>::Root->red=false;
 }
 
 /* Template instantiations */
