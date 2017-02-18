@@ -35,7 +35,7 @@ public:
     
     Tree* Root;
     
-public:
+protected:
     
     Tree* Make_Node(T key);
     
