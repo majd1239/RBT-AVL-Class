@@ -19,9 +19,6 @@ class BST
 {
 public:
     
-    enum COLOR
-    {   Black,  Red   };
-    
     enum type
     {  AVL, RBT };
     
@@ -31,9 +28,9 @@ public:
         Tree* child[2];
         
         short balance; //AVL
-        COLOR color;   //RBT
+        bool red;   //RBT
         
-        Tree(T key) : value(key) { child[0]=NULL; child[1]=NULL; color=Red; balance=0; }
+        Tree(T key) : value(key) { child[0]=NULL; child[1]=NULL; red=true; balance=0; }
     };
     
     Tree* Root;
