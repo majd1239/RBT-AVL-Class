@@ -1,4 +1,4 @@
-# Binary-Search-Trees-Class-AVL-Red-Black-
+# Binary Search Trees Class - AVL and Red Black Trees
 
 This is a binary search tree class that features AVL and Red & Black trees. They are children of a BST class that result in a lot of code reuse.
 
