@@ -1,13 +1,8 @@
-//
-//  BST.cpp
-//  Bst
-//
+
 //  Created by Majd Takieddine on 4/9/17.
 //  Copyright © 2017 Majd Takieddine. All rights reserved.
-//
 
 #ifdef BST_hpp
-
 
 template<class T>
 typename BST<T>::Tree* BST<T>::Make_Node(T key)
@@ -55,7 +50,6 @@ typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
     else
     {
         root->Height=Update_H(root->child[dir], root->child[!dir]);
-        
         temp->Height=Update_H(temp->child[dir], temp->child[!dir]);
     }
     
@@ -67,7 +61,6 @@ template<class T>
 typename BST<T>::Tree* BST<T>::Double_Rotate(Tree* root, int dir, type mode)
 {
     root->child[!dir]=Rotate(root->child[!dir],!dir,mode);
-    
     return Rotate(root, dir,mode);
 }
 
@@ -83,7 +76,6 @@ typename BST<T>::Tree* BST<T>::Max_h(Tree* root)
     return !root->child[1] ? root : Max_h(root->child[1]);
 }
 
-
 template<class T>
 typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int &done, type mode)
 {
@@ -94,7 +86,6 @@ typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int &done, type mode)
         
         root->child[dir]=insert_h(root->child[dir],key,done,mode);
         
-        
         if(mode==RBT)
         {
             if(isRed(root->child[dir]))
@@ -102,10 +93,8 @@ typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int &done, type mode)
                 if(isRed(root->child[!dir]))
                 {
                     root->red=true;
-                    
                     root->child[0]->red=root->child[1]->red=false;
                 }
-                
                 else
                 {
                     if(isRed(root->child[dir]->child[dir]))
@@ -127,11 +116,9 @@ typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int &done, type mode)
                 
                 done=1;
             }
-            
             root->Height=Update_H(root->child[dir], root->child[!dir]);
         }
     }
-    
     return root;
 }
 
@@ -146,7 +133,6 @@ void BST<T>::print_h(Tree* root)
         print_h(root->child[1]);
     }
 }
-
 
 template<class T>
 typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
@@ -165,7 +151,6 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
             
             par->red=false;
             sib->red=true;
-            
         }
         else
         {
@@ -177,8 +162,7 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
             
             case_new_par ? root = par : root->child[dir] = par;
             
-            *flag=1;
-            
+            *flag=1; 
         }
     }
     return root;
@@ -211,7 +195,6 @@ typename BST<T>::Tree* BST<T>::remove_h(Tree* root, T key, int *done, type mode)
                 if (isRed(succ) || (isRed(root) && (root->red=false)) ) *done=1;
                 
             }
-            
             delete succ;
         }
     }
@@ -267,6 +250,7 @@ T AVL<T>::Minimum() {
     return BST<T>::Min_h(BST<T>::Root)->value;
 }
 
+
 template<class T>
 void AVL<T>::Insert(T key)
 {
@@ -274,13 +258,11 @@ void AVL<T>::Insert(T key)
     BST<T>::Root=BST<T>::insert_h( BST<T>::Root, key, status,BST<T>::AVL);
 }
 
-
 template<class T>
 void AVL<T>::Print()
 {
     if(BST<T>::Root) BST<T>::print_h(BST<T>::Root); else cout<<"Tree is empty";
 }
-
 
 template<class T>
 void AVL<T>::Remove(T key)
@@ -289,7 +271,6 @@ void AVL<T>::Remove(T key)
     
     BST<T>::Root=BST<T>::remove_h(BST<T>::Root, key, &status,BST<T>::AVL);
 }
-
 
 template<class T>
 RBT<T>::RBT(){  BST<T>::Root=NULL; }
@@ -315,4 +296,3 @@ void RBT<T>::Remove(T key)
 }
 
 #endif
-
