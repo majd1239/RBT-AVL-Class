@@ -137,7 +137,6 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
         if(!isRed(sib->child[1]) && !isRed(sib->child[0]))
         {
             if(isRed(par)) *flag=1;
-   
             par->red=false;
             sib->red=true;
         }
@@ -175,15 +174,12 @@ typename BST<T>::Tree* BST<T>::remove_h(Tree* root, T key, int *done, type mode)
         else
         {
             succ=root;
-            
             root=root->child[!root->child[0]];
             
             if(mode==RBT)
-            {
                 if (isRed(succ) || (isRed(root) && (root->red=false)) ) *done=1;
-                
-            }
-            delete succ;
+            
+            delete succ; 
         }
     }
     else
