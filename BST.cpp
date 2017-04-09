@@ -33,9 +33,7 @@ template<class T>
 typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
 {
     Tree *temp=root->child[!dir];
-    
     root->child[!dir]=temp->child[dir];
-    
     temp->child[dir]=root;
     
     if(mode==RBT)
