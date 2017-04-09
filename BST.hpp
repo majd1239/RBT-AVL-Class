@@ -1,8 +1,8 @@
 //
 //  BST.hpp
-//  Void
+//  Bst
 //
-//  Created by Majd Takieddine on 1/19/17.
+//  Created by Majd Takieddine on 4/9/17.
 //  Copyright © 2017 Majd Takieddine. All rights reserved.
 //
 
@@ -12,12 +12,11 @@
 #include <iostream>
 using namespace std;
 
-#endif /* BST_hpp */
 
 template<class T>
 class BST
 {
-public:
+protected:
     
     enum type
     {  AVL, RBT };
@@ -27,10 +26,10 @@ public:
         T value;
         Tree* child[2];
         
-        short balance; //AVL
-        bool red;   //RBT
+        int Height;
+        bool red;   
         
-        Tree(T key) : value(key) { child[0]=NULL; child[1]=NULL; red=true; balance=0; }
+        Tree(T key) : value(key) { child[0]=NULL; child[1]=NULL; red=true; Height=0; }
     };
     
     Tree* Root;
@@ -49,19 +48,19 @@ protected:
     
     Tree* Max_h(Tree* root);
     
-    Tree* insert_h(Tree* root, T key, int *done, type mode);
+    Tree* insert_h(Tree* root, T key, int &done, type mode);
     
     Tree* remove_h(Tree* root, T key, int *status, type mode);
     
     Tree* delete_fix(Tree* root, int dir, int *flag);
     
-    Tree* tree_balance(Tree* root, int dir);
-    
-    void Bal_adj(Tree* root, int dir, int bal);
-    
     bool isRed(Tree* root);
     
     void print_h(Tree* root);
+    
+    int H(Tree* root);
+    
+    int Update_H(Tree* a,Tree* b);
     
 };
 
@@ -69,7 +68,7 @@ protected:
 template <class T>
 class AVL : public BST<T>
 {
-
+    
 public:
     
     AVL();
@@ -91,7 +90,7 @@ public:
 template <class T>
 class RBT :  public AVL<T>
 {
-
+    
 public:
     
     RBT();
@@ -103,3 +102,5 @@ public:
 };
 
 
+#include"BST.cpp"
+#endif /* BST_hpp */
