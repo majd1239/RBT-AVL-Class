@@ -9,13 +9,11 @@ typename BST<T>::Tree* BST<T>::Make_Node(T key)
 {
     Tree *Node = new Tree(key); return Node;
 }
-
 template<class T>
 bool BST<T>::isRed(BST::Tree *root)
 {
     return root && root->red;
 }
-
 template<class T>
 typename BST<T>::Tree* BST<T>::Search_h(T key, Tree* root)
 {
@@ -26,13 +24,11 @@ int BST<T>::H(Tree* a)
 {
     return !a ? -1 : a->Height;
 }
-
 template<class T>
 int BST<T>::Update_H(Tree* a , Tree* b)
 {
     return 1 + (H(a) > H(b) ? H(a) : H(b));
 }
-
 template<class T>
 typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
 {
@@ -55,27 +51,22 @@ typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
     
     return temp;
 }
-
-
 template<class T>
 typename BST<T>::Tree* BST<T>::Double_Rotate(Tree* root, int dir, type mode)
 {
     root->child[!dir]=Rotate(root->child[!dir],!dir,mode);
     return Rotate(root, dir,mode);
 }
-
 template<class T>
 typename BST<T>::Tree* BST<T>::Min_h(Tree* root)
 {
     return !root->child[0] ? root : Min_h(root->child[0]);
 }
-
 template<class T>
 typename BST<T>::Tree* BST<T>::Max_h(Tree* root)
 {
     return !root->child[1] ? root : Max_h(root->child[1]);
 }
-
 template<class T>
 typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int &done, type mode)
 {
@@ -121,7 +112,6 @@ typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int &done, type mode)
     }
     return root;
 }
-
 template<class T>
 void BST<T>::print_h(Tree* root)
 {
@@ -133,7 +123,6 @@ void BST<T>::print_h(Tree* root)
         print_h(root->child[1]);
     }
 }
-
 template<class T>
 typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
 {
@@ -148,7 +137,7 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
         if(!isRed(sib->child[1]) && !isRed(sib->child[0]))
         {
             if(isRed(par)) *flag=1;
-            
+   
             par->red=false;
             sib->red=true;
         }
@@ -167,7 +156,6 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
     }
     return root;
 }
-
 template<class T>
 typename BST<T>::Tree* BST<T>::remove_h(Tree* root, T key, int *done, type mode)
 {
@@ -231,7 +219,6 @@ typename BST<T>::Tree* BST<T>::remove_h(Tree* root, T key, int *done, type mode)
     }
     return root;
 }
-
 template<class T>
 AVL<T>::AVL(){  BST<T>::Root=NULL; }
 
@@ -239,31 +226,25 @@ template<class T>
 bool AVL<T>::Search(T key)  {
     return BST<T>::Search_h(key, BST<T>::Root) ? true : false;
 }
-
 template<class T>
 T AVL<T>::Maximum()  {
     return BST<T>::Max_h(BST<T>::Root)->value;
 }
-
 template<class T>
 T AVL<T>::Minimum() {
     return BST<T>::Min_h(BST<T>::Root)->value;
 }
-
-
 template<class T>
 void AVL<T>::Insert(T key)
 {
     int status=0;
     BST<T>::Root=BST<T>::insert_h( BST<T>::Root, key, status,BST<T>::AVL);
 }
-
 template<class T>
 void AVL<T>::Print()
 {
     if(BST<T>::Root) BST<T>::print_h(BST<T>::Root); else cout<<"Tree is empty";
 }
-
 template<class T>
 void AVL<T>::Remove(T key)
 {
@@ -271,7 +252,6 @@ void AVL<T>::Remove(T key)
     
     BST<T>::Root=BST<T>::remove_h(BST<T>::Root, key, &status,BST<T>::AVL);
 }
-
 template<class T>
 RBT<T>::RBT(){  BST<T>::Root=NULL; }
 
@@ -283,7 +263,6 @@ void RBT<T>::Insert(T key)
     
     BST<T>::Root->red=false;
 }
-
 template<class T>
 void RBT<T>::Remove(T key)
 {
