@@ -1,12 +1,12 @@
 //
 //  BST.cpp
-//  Void
+//  Bst
 //
-//  Created by Majd Takieddine on 2/2/17.
+//  Created by Majd Takieddine on 4/9/17.
 //  Copyright © 2017 Majd Takieddine. All rights reserved.
 //
 
-#include "BST.hpp"
+#ifdef BST_hpp
 
 
 template<class T>
@@ -26,7 +26,17 @@ typename BST<T>::Tree* BST<T>::Search_h(T key, Tree* root)
 {
     return root ? root->value==key ? root : Search_h(key,root->child[key>root->value]) : NULL;
 }
+template<class T>
+int BST<T>::H(Tree* a)
+{
+    return !a ? -1 : a->Height;
+}
 
+template<class T>
+int BST<T>::Update_H(Tree* a , Tree* b)
+{
+    return 1 + (H(a) > H(b) ? H(a) : H(b));
+}
 
 template<class T>
 typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
@@ -41,6 +51,12 @@ typename BST<T>::Tree* BST<T>::Rotate(Tree* root, int dir, type mode)
     {
         root->red=true;
         temp->red=false;
+    }
+    else
+    {
+        root->Height=Update_H(root->child[dir], root->child[!dir]);
+        
+        temp->Height=Update_H(temp->child[dir], temp->child[!dir]);
     }
     
     return temp;
@@ -67,61 +83,9 @@ typename BST<T>::Tree* BST<T>::Max_h(Tree* root)
     return !root->child[1] ? root : Max_h(root->child[1]);
 }
 
-template<class T>
-void BST<T>::Bal_adj(BST<T>::Tree* root, int dir, int bal)
-{
-    typename BST<T>::Tree* grand_child= root->child[dir]->child[!dir];
-    
-    if(grand_child->balance ==0)
-        root->balance=root->child[dir]->balance=0;
-    
-    else if(grand_child->balance == bal)
-    {
-        root->balance=-bal;
-        
-        root->child[dir]->balance=0;
-        
-    }
-    else
-    {
-        root->balance=0;
-        
-        root->child[dir]->balance=bal;
-    }
-    
-    grand_child->balance=0;
-}
 
 template<class T>
-typename BST<T>::Tree* BST<T>::tree_balance(BST<T>::Tree* root, int dir)
-{
-    int  bal= dir ? 1 : -1;
-    
-    if(root->child[dir]->balance==bal)
-    {
-        root->balance=root->child[dir]->balance=0;
-        
-        root=Rotate(root, !dir,AVL);
-        
-    }
-    else if(root->child[dir]->balance==0)
-    {
-        root->child[dir]->balance=-bal;
-        
-        root=Rotate(root, !dir, AVL);
-    }
-    else
-    {
-        Bal_adj(root, dir, bal);
-        
-        root=Double_Rotate(root, !dir, AVL);
-    }
-    
-    return root;
-}
-
-template<class T>
-typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int *done, type mode)
+typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int &done, type mode)
 {
     if(!root)
         root=Make_Node(key);
@@ -152,21 +116,19 @@ typename BST<T>::Tree* BST<T>::insert_h(Tree* root, T key, int *done, type mode)
                 }
             }
         }
-        else
+        else if(!done)
         {
-            if(!*done)
+            if( H(root->child[dir]) - H(root->child[!dir]) >= 2)
             {
-                root->balance += dir ? 1 : -1 ;
+                if( H(root->child[dir]->child[dir]) > H(root->child[dir]->child[!dir]) )
+                    root = Rotate(root, !dir, AVL);
+                else
+                    root = Double_Rotate(root, !dir, AVL);
                 
-                if(root->balance==0)
-                    *done=true;
-                
-                if(abs(root->balance)>1)
-                {
-                    root=tree_balance(root, dir);
-                    *done=true;
-                }
+                done=1;
             }
+            
+            root->Height=Update_H(root->child[dir], root->child[!dir]);
         }
     }
     
@@ -222,10 +184,8 @@ typename BST<T>::Tree* BST<T>::delete_fix(Tree* root,int dir,int *flag)
     return root;
 }
 
-
-
 template<class T>
-typename BST<T>::Tree*  BST<T>::remove_h(Tree* root, T key, int *done, type mode)
+typename BST<T>::Tree* BST<T>::remove_h(Tree* root, T key, int *done, type mode)
 {
     Tree* succ;
     
@@ -268,13 +228,21 @@ typename BST<T>::Tree*  BST<T>::remove_h(Tree* root, T key, int *done, type mode
         {
             if(!*done)
             {
-                dir ? --root->balance : ++root->balance;
+                int lh= H(root->child[dir]);
+                int rh= H(root->child[!dir]);
                 
-                if(abs(root->balance)>1)
-                    root=tree_balance(root, !dir);
+                root->Height=Update_H(root->child[dir], root->child[!dir]);
                 
-                if(root->balance!=0)
+                if(lh-rh == -1)
                     *done=1;
+                
+                if( lh-rh <= -2)
+                {
+                    if( H(root->child[dir]->child[dir]) > H(root->child[dir]->child[!dir]) )
+                        root = Rotate(root, !dir, AVL);
+                    else
+                        root = Double_Rotate(root, !dir, AVL);
+                }
             }
         }
     }
@@ -303,7 +271,7 @@ template<class T>
 void AVL<T>::Insert(T key)
 {
     int status=0;
-    BST<T>::Root=BST<T>::insert_h( BST<T>::Root, key, &status,BST<T>::AVL);
+    BST<T>::Root=BST<T>::insert_h( BST<T>::Root, key, status,BST<T>::AVL);
 }
 
 
@@ -330,7 +298,7 @@ template<class T>
 void RBT<T>::Insert(T key)
 {
     int status=0;
-    BST<T>::Root=BST<T>::insert_h(BST<T>::Root, key, &status,BST<T>::RBT);
+    BST<T>::Root=BST<T>::insert_h(BST<T>::Root, key, status,BST<T>::RBT);
     
     BST<T>::Root->red=false;
 }
@@ -346,22 +314,5 @@ void RBT<T>::Remove(T key)
         BST<T>::Root->red=false;
 }
 
-/* Template instantiations */
-template class AVL<char>;
-template class RBT<char>;
-template class AVL<short>;
-template class RBT<short>;
-template class AVL<int>;
-template class RBT<int>;
-template class AVL<long>;
-template class RBT<long>;
-template class AVL<double>;
-template class RBT<double>;
-template class AVL<float>;
-template class RBT<float>;
-
-
-
-
-
+#endif
 
